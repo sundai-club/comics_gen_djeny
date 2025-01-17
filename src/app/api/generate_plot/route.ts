@@ -30,6 +30,9 @@ const SYSTEM_PROMT = `Generate comics story with image prompts and captions in J
             }
         ]
     }
+
+    If users prompt is not appropriate for the context, return an empty json:
+    {}
 `;
 
 export async function POST(req: Request) {

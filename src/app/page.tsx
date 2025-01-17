@@ -11,13 +11,14 @@ export default function Home() {
     imageUrl?: string;
   }>>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const generateStory = async () => {
     try {
       setIsLoading(true);
       setComicPanels([]);
+      setError(null);  // Reset error state
       
-      // First, get the story and prompts from GPT
       const storyResponse = await fetch('/api/generate_plot', {
         method: 'POST',
         headers: {
@@ -27,13 +28,18 @@ export default function Home() {
       });
       
       const storyData = await storyResponse.json();
-      if (storyData.result?.comics) {
-        setComicPanels(storyData.result.comics);
-        // Start generating images for each panel
-        generateNextImage(storyData.result.comics, 0);
+      if (!storyData.result?.comics || storyData.result.comics.length === 0) {
+        setError("Sorry, I couldn't generate a story for this prompt. Please try a different prompt that's more appropriate for a family-friendly dog adventure!");
+        setIsLoading(false);
+        return;
       }
+      
+      setComicPanels(storyData.result.comics);
+      // Start generating images for each panel
+      generateNextImage(storyData.result.comics, 0);
     } catch (error) {
       console.error('Error:', error);
+      setError("An error occurred while generating the story. Please try again.");
       setIsLoading(false);
     }
   };
@@ -102,6 +108,12 @@ export default function Home() {
           >
             {isLoading ? 'Creating Your Comic...' : '✨ Generate Comic ✨'}
           </button>
+          
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-lg text-red-600">
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Comics Grid */}
