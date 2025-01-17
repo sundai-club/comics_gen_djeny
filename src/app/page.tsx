@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
@@ -76,18 +77,28 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
       {/* Comic Header */}
-      <header className="text-center mb-12 pt-8">
+      <motion.header 
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="text-center mb-12 pt-8"
+      >
         <h1 className="text-5xl sm:text-6xl font-bold text-yellow-500 
           tracking-wider transform -rotate-2 
           [text-shadow:2px_2px_0_#000,4px_4px_0_#000]">
           AI COMIC CREATOR
         </h1>
         <p className="text-xl mt-4 text-gray-700">Transform your ideas into comic stories about dog Djeny!</p>
-      </header>
+      </motion.header>
 
       <main className="max-w-7xl mx-auto">
         {/* Input Section */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-2xl mx-auto">
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-2xl mx-auto"
+        >
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -97,31 +108,46 @@ export default function Home() {
               focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
               transition-colors min-h-[100px] text-gray-900"
           />
-          <button 
+          <motion.button 
             onClick={generateStory}
             disabled={isLoading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             className="w-full mt-4 px-6 py-3 bg-yellow-500 text-gray-900 
               rounded-lg font-bold hover:bg-yellow-400 transition-colors 
               disabled:bg-gray-400 disabled:text-gray-600 
-              transform hover:-translate-y-0.5 active:translate-y-0
               [text-shadow:1px_1px_0_#fff] shadow-md"
           >
             {isLoading ? 'Creating Your Comic...' : '✨ Generate Comic ✨'}
-          </button>
+          </motion.button>
           
           {error && (
             <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-lg text-red-600">
               {error}
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Comics Grid */}
         {comicPanels.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-8">
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-lg shadow-lg p-8"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {comicPanels.map((panel, index) => (
-                <div key={index} className="comic-panel">
+                <motion.div
+                  key={index}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ 
+                    duration: 0.5,
+                    delay: index * 0.2 // Stagger the animations
+                  }}
+                  className="comic-panel"
+                >
                   <div className="relative aspect-square bg-gray-50 
                     rounded-lg overflow-hidden border-4 border-gray-900 
                     shadow-[8px_8px_0_0_rgba(0,0,0,0.2)]">
@@ -148,10 +174,10 @@ export default function Home() {
                       {panel.caption}
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
       </main>
     </div>
