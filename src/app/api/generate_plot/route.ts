@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  baseURL: "https://models.inference.ai.azure.com",
-  apiKey: process.env.GITHUB_TOKEN,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const SYSTEM_PROMT = `Generate comics story with image prompts and captions in JSON format
@@ -31,7 +30,7 @@ const SYSTEM_PROMT = `Generate comics story with image prompts and captions in J
         ]
     }
 
-    If users prompt is not appropriate for the context, return an empty json:
+    If you can not come up with an appropriate story based on the user prompt, return an empty json:
     {}
 `;
 
